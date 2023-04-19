@@ -1,0 +1,26 @@
+name: Make
+description: Sets up the repos and dependencies then runs a target in the makefile
+inputs:
+  target:
+    description: The target you want to run in the Makefile
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Cache State
+      id: cache-primes
+      uses: actions/cache@v3
+      with:
+        path: |
+          .state
+          target
+        key: ${{ runner.os }}-state
+
+    - name: Install Clojure
+      uses: DeLaGuardo/setup-clojure@10.3
+      with:
+        cli: "1.11.1.1273"
+
+    - name: Run the Makefile target
+      run: make ${{ inputs.target }}
+      shell: bash

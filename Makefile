@@ -1,7 +1,7 @@
 SRC_FILES:=$(wildcard src/**/*)
 TEST_FILES:=$(wildcard test/**/*)
 
-default: target/ghpr-standalone.jar
+build: target/ghpr-standalone.jar
 test: target/test.done
 
 target/ghpr-standalone.jar: $(shell TARGET=build scripts/build-cache ${SRC_FILES})
