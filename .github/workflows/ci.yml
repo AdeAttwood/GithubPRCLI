@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push: { branches: ["0.x"] }
+  pull_request: { branches: ["0.x"] }
+
+jobs:
+  build-standalone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Clojure
+        uses: DeLaGuardo/setup-clojure@10
+        with:
+          cli: "1.11.1.1273"
+
+      - name: Build Standalone
+        run: make
