@@ -1,0 +1,27 @@
+#! /bin/bash
+#
+# See: https://andydote.co.uk/2022/09/19/make-content-hash/
+STATE_DIR=".state"
+if [ ! -d "${STATE_DIR}" ]; then mkdir "${STATE_DIR}"; fi
+
+NOW="$(date "+%s")"
+KEY="$(sha256sum $@ | sort | uniq | sha256sum | cut -d" " -f 1).sha256"
+if [ ! -z "$TARGET" ]; then KEY="${TARGET}-${KEY}"; fi
+
+if [ -f "${STATE_DIR}/${KEY}" ]; then
+  # This hash is in the state store, re-apply it's date to the state file (as
+  # something like s3 sync might have changed the file's modified date.
+  LAST_DATE="$(sed -n 's/date:\s*\(.*\)/\1/p' "${STATE_DIR}/${KEY}")"
+  touch -d "@${LAST_DATE}" "${STATE_DIR}/${KEY}"
+else
+  # Remove any old caches we have for this target
+  if [ ! -z "${TARGET}" ]; then
+    rm ${STATE_DIR}/${TARGET}-*
+  fi
+
+  # This is a new hash
+  echo "date: $NOW" > "${STATE_DIR}/${KEY}"
+
+fi
+
+echo "${STATE_DIR}/${KEY}"
