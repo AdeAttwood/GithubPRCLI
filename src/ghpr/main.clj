@@ -18,7 +18,7 @@
 (defn submit-command [_m]
   (if (fs/exists? ".git/GH_PR_BODY.md")
     (do
-      (ps/shell (str "gh" "pr" "create" "--assignee" "@me" "--body" (slurp ".git/GH_PR_BODY.md")))
+      (ps/shell "gh" "pr" "create" "--assignee" "@me" "--body" (slurp ".git/GH_PR_BODY.md"))
       (fs/delete ".git/GH_PR_BODY.md")
       (println "Done!!"))
     (println "There is no PR prepared. Please run the `prepare` command to prepare your PR.")))

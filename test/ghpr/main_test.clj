@@ -26,6 +26,6 @@
 (t/deftest test-remove-body
   (t/testing "The submit command will remove the file once we are done"
     (fs/create-file ".git/GH_PR_BODY.md")
-    (with-redefs [ps/shell (fn [_] ())]
+    (with-redefs [ps/shell (fn [_ _ _ _ _ _ _] ())]
       (ghpr/submit-command ()))
     (t/is (not (fs/exists? (str project-root-directory "/.git/GH_PR_BODY.md"))))))
