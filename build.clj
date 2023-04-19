@@ -1,11 +1,10 @@
 (ns build
   (:require [clojure.tools.build.api :as b]))
 
-(def lib 'co.uk.adeattwood/ghpr)
-(def version "1.1.1")
+(def lib 'ghpr)
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
-(def uber-file (format "target/%s-%s-standalone.jar" (name lib) version))
+(def uber-file (format "target/%s-standalone.jar" (name lib)))
 
 (defn clean [_]
   (b/delete {:path "target"}))
