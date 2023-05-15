@@ -24,7 +24,14 @@
     (println "There is no PR prepared. Please run the `prepare` command to prepare your PR.")))
 
 (defn help [_m]
-  (println "HELP ME!!"))
+  (println "A CLI tool to help create GitHub pull requests using your favourite EDITOR")
+  (println "")
+  (println "\033[1mCommands:\033[0m")
+  (println "  prepare  Prepare you PR description using the project template")
+  (println "  submit   Submit your PR using the gh CLI tool")
+  (println "  p        Alias to `prepare`")
+  (println "  s        Alias to `submit`")
+  (println ""))
 
 (def command-table
   [{:cmds ["prepare"] :fn prepare-command}
