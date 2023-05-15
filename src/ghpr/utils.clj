@@ -1,10 +1,6 @@
-(ns ghpr.utils)
-
+(ns ghpr.utils
+  (:require [babashka.process :as ps]))
 
 (defn edit-file [file]
-  (->
-   (ProcessBuilder. ["nvim" file])
-   (.inheritIO)
-   (.start)
-   (.waitFor)))
+  (ps/check (ps/process {:in :inherit :out :inherit} "nvim" file )))
 
