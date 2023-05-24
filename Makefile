@@ -23,9 +23,9 @@ build-in-docker:
 	docker run -v "$(shell pwd):/src" -w /src --rm clojure -T:build uber
 	$(MAKE) target/ghpr-standalone
 
-gh-extention: target/ghpr-standalone
+gh-extension:
 	mkdir -p target/gh-mr
-	mv target/ghpr-standalone target/gh-mr/gh-mr
+	cp target/ghpr-standalone target/gh-mr/gh-mr
 
 clean:
 	rm -rf .state
