@@ -1,6 +1,6 @@
 {:paths ["src"]
  :deps {org.babashka/cli {:mvn/version "0.6.45"}
-        babashka/fs {:mvn/version "0.3.17"}
+        babashka/fs {:mvn/version "0.4.19"}
         babashka/process {:mvn/version "0.4.13"}}
  :aliases
  {:test {:extra-paths ["test"]
