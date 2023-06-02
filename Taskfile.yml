@@ -1,0 +1,66 @@
+version: "3"
+
+run: when_changed
+
+vars:
+  SRC_FILES: "src/**/*.clj"
+  TEST_FILES: "test/**/*.clj"
+
+tasks:
+  build:
+    desc: "Build ghpr-standalone.jar"
+    sources: ["{{.SRC_FILES}}"]
+    cmds:
+      - clojure -T:build uber
+
+  format:fix:
+    desc: Format all the code
+    sources: ["{{.SRC_FILES}}", "{{.TEST_FILES}}"]
+    cmds:
+      - clojure-lsp clean-ns
+      - clojure-lsp format
+
+  format:check:
+    desc: Format all the code
+    sources: ["{{.SRC_FILES}}", "{{.TEST_FILES}}"]
+    cmds:
+      - clojure-lsp clean-ns --dry
+      - clojure-lsp format --dry
+
+  test:
+    desc: Runs all of the tests
+    sources: ["{{.SRC_FILES}}", "{{.TEST_FILES}}"]
+    cmds:
+      - clojure -X:test
+
+  lint:
+    desc: Lint all of the source files
+    sources: ["{{.SRC_FILES}}", "{{.TEST_FILES}}"]
+    cmds:
+      - clojure -Sdeps '{:deps {clj-kondo/clj-kondo {:mvn/version "RELEASE"}}}' -M -m clj-kondo.main --lint src test
+
+  standalone:
+    desc: Build the standalone static binary
+    deps: ["build"]
+    sources: ["{{.SRC_FILES}}"]
+    cmds:
+      - |
+        docker run \
+          -v "${PWD}/target:/build" -w /build --rm \
+          ghcr.io/graalvm/native-image:22.3.1 \
+          -jar ghpr-standalone.jar --no-fallback --static \
+          --initialize-at-build-time --diagnostics-mode
+
+  build-in-docker:
+    desc: Build the standalone static binary in a docker container
+    sources: ["{{.SRC_FILES}}"]
+    cmds:
+      - docker run -v "${PWD}:/src" -w /src --rm clojure -T:build uber
+      - { task: standalone }
+
+  gh-extension:
+    desc: Build the GitHub CLI extension
+    sources: ["{{.SRC_FILES}}"]
+    cmds:
+      - mkdir -p target/gh-mr
+      - cp target/ghpr-standalone target/gh-mr/gh-mr
