@@ -17,7 +17,7 @@ runs:
         key: ${{ runner.os }}-state
 
     - name: Install Clojure
-      uses: DeLaGuardo/setup-clojure@11.0
+      uses: DeLaGuardo/setup-clojure@12.5
       with:
         cli: "1.11.1.1273"
 
